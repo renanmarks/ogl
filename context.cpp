@@ -24,9 +24,9 @@ private:
         std::string glVersion = reinterpret_cast<char const*>(glGetString(GL_VERSION));
         std::string glslVersion = reinterpret_cast<char const*>(glGetString(GL_SHADING_LANGUAGE_VERSION));
 
-        std::cout << "OpenGL Version   : " << glVersion << '\n'
-                  << "OpenGLSL Version : " << glslVersion << '\n'
-                  << "OpenGL Renderer  : " << glRender << std::endl;
+        std::cout << "OpenGL Renderer  : " << glRender << '\n'
+                  << "OpenGL Version   : " << glVersion << '\n'
+                  << "OpenGLSL Version : " << glslVersion << std::endl;
     }
 
     void setupContext()
@@ -40,7 +40,7 @@ private:
 
         this->window = SDL_CreateWindow("OpenGL Test", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 512, 512, SDL_WINDOW_OPENGL);
 
-        if (this->window == NULL)
+        if (this->window == nullptr)
         {
             std::stringstream stream;
             stream << "Unable to create window" << std::endl;
@@ -83,7 +83,7 @@ private:
         // 		SDL_SetRenderDrawColor(&renderer, 255, 0, 0, 255);
         // 		SDL_RenderClear(&renderer);
         //
-        glClearColor(0.0, 0.0, 0.0, 1.0);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     }
 
     void compileShader(const std::string &filePath, GLuint shaderID) const
@@ -111,7 +111,7 @@ private:
         // Compile Shader
         std::cout << "Compiling shader : " << filePath << std::endl;
 
-        glShaderSource(shaderID, 1, &sourcePointer , NULL);
+        glShaderSource(shaderID, 1, &sourcePointer , nullptr);
         glCompileShader(shaderID);
 
         // Check Shader
@@ -121,7 +121,7 @@ private:
         if ( result == GL_FALSE )
         {
             std::vector<char> errorMessage(infoLogLength+1);
-            glGetShaderInfoLog(shaderID, infoLogLength, NULL, &errorMessage[0]);
+            glGetShaderInfoLog(shaderID, infoLogLength, nullptr, &errorMessage[0]);
 
             std::cout << infoLogLength << std::string(errorMessage.begin(), errorMessage.end()) << std::endl;
         }
@@ -151,7 +151,7 @@ private:
         if ( result == GL_FALSE )
         {
             std::vector<char> errorMessage(InfoLogLength+1);
-            glGetProgramInfoLog(programID, InfoLogLength, NULL, &errorMessage[0]);
+            glGetProgramInfoLog(programID, InfoLogLength, nullptr, &errorMessage[0]);
 
             std::cout << std::string(errorMessage.begin(), errorMessage.end()) << std::endl;
         }
