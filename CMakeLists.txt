@@ -5,6 +5,7 @@ set (CMAKE_CXX_STANDARD 14)
 
 find_package(OpenGL REQUIRED)
 find_package(SDL2 REQUIRED)
+find_package(glm REQUIRED)
 
 aux_source_directory(. SRC_LIST)
 
