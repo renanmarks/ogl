@@ -86,87 +86,6 @@ private:
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     }
 
-    void compileShader(const std::string &filePath, GLuint shaderID) const
-    {
-        std::string shaderCode;
-
-        // Read the Vertex Shader code from the file
-        {
-            std::ifstream shaderStream(filePath, std::ios::in);
-
-            if(shaderStream.good() == false)
-            {
-                throw std::runtime_error("Error when opening " + filePath + ". Are you in the right directory ?");
-            }
-
-            shaderCode.assign( (std::istreambuf_iterator<char>(shaderStream) ),
-                               (std::istreambuf_iterator<char>()             ) );
-
-        } // End of scope, RAII shaderStream closed.
-
-        char const * sourcePointer = shaderCode.c_str();
-        GLint        result        = GL_FALSE;
-        int          infoLogLength = 0;
-
-        // Compile Shader
-        std::cout << "Compiling shader : " << filePath << std::endl;
-
-        glShaderSource(shaderID, 1, &sourcePointer , nullptr);
-        glCompileShader(shaderID);
-
-        // Check Shader
-        glGetShaderiv(shaderID, GL_COMPILE_STATUS, &result);
-        glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &infoLogLength);
-
-        if ( result == GL_FALSE )
-        {
-            std::vector<char> errorMessage(infoLogLength+1);
-            glGetShaderInfoLog(shaderID, infoLogLength, nullptr, &errorMessage[0]);
-
-            std::cout << infoLogLength << std::string(errorMessage.begin(), errorMessage.end()) << std::endl;
-        }
-    }
-
-    GLuint linkProgram(GLuint VertexShaderID, GLuint FragmentShaderID) const
-    {
-        GLuint programID = glCreateProgram();
-
-        std::cout << "Linking shader programs... ";
-
-        glAttachShader(programID, VertexShaderID);
-        glAttachShader(programID, FragmentShaderID);
-
-        // Setup Vertex Attributes (only for GL < 3.3 and GLSL < 3.3)
-        // glBindAttribLocation (ProgramID, 0, "vertexPosition_modelspace");
-
-        glLinkProgram(programID);
-
-        GLint result        = GL_FALSE;
-        int   InfoLogLength = 0;
-
-        // Check the program
-        glGetProgramiv(programID, GL_LINK_STATUS, &result);
-        glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &InfoLogLength);
-
-        if ( result == GL_FALSE )
-        {
-            std::vector<char> errorMessage(InfoLogLength+1);
-            glGetProgramInfoLog(programID, InfoLogLength, nullptr, &errorMessage[0]);
-
-            std::cout << std::string(errorMessage.begin(), errorMessage.end()) << std::endl;
-        }
-
-        glDetachShader(programID, VertexShaderID);
-        glDetachShader(programID, FragmentShaderID);
-
-        glDeleteShader(VertexShaderID);
-        glDeleteShader(FragmentShaderID);
-
-        std::cout << "done." << std::endl;
-
-        return programID;
-    }
-
 public:
     Impl()
     {
@@ -189,24 +108,6 @@ public:
     {
         SDL_GL_SwapWindow(this->window);
     }
-
-    GLuint getShadersProgramID(const std::string &vertexFilePath, const std::string &fragmentFilePath) const
-    {
-        // Create the shaders
-        GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
-        GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
-
-        // Compile Vertex Shader
-        compileShader(vertexFilePath, VertexShaderID);
-
-        // Compile Fragment Shader
-        compileShader(fragmentFilePath, FragmentShaderID);
-
-        // Link the program
-        GLuint ProgramID = linkProgram(VertexShaderID, FragmentShaderID);
-
-        return ProgramID;
-    }
 };
 
 /*************************************************/
@@ -220,11 +121,6 @@ ogl::Context::Context()
 void ogl::Context::swapWindow()
 {
     this->impl->swapWindow();
-}
-
-GLint ogl::Context::getShadersProgramID(const std::string &vertexFilePath, const std::string &fragmentFilePath) const
-{
-    return this->impl->getShadersProgramID(vertexFilePath, fragmentFilePath);
 }
 
 ogl::Context::~Context() = default;

@@ -5,10 +5,12 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "context.h"
+#include "glslprogram.h"
 
 int main(int argc, char *argv[])
 {
     ogl::Context context;
+    ogl::GLSLProgram glslProgram;
 
     // Dark blue background
     glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
@@ -27,7 +29,12 @@ int main(int argc, char *argv[])
     glBindVertexArray(VertexArrayID);
 
     // Create and compile our GLSL program from the shaders
-    GLuint programID = context.getShadersProgramID("shaders/SimpleTransform.shader", "shaders/SimpleFragmentShader.shader");
+    glslProgram.addShader(ogl::GLSLShader("shaders/SimpleTransform.shader", ogl::GLSLShader::VERTEX));
+    glslProgram.addShader(ogl::GLSLShader("shaders/SimpleFragmentShader.shader", ogl::GLSLShader::FRAGMENT));
+    glslProgram.linkProgram();
+
+    // Get Program ID
+    GLuint programID = glslProgram.getId();
 
     // Get a handle for our "MVP" uniform
     GLuint matrixID = glGetUniformLocation(programID, "MVP");

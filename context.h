@@ -1,8 +1,6 @@
 #ifndef CONTEXT_H
 #define CONTEXT_H
 
-#include <GL/gl.h>
-#include <string>
 #include <memory>
 
 namespace ogl
@@ -19,8 +17,6 @@ public:
     ~Context();
 
     void swapWindow();
-    GLint getShadersProgramID(const std::string& vertexFilePath, const std::string& fragmentFilePath) const;
-
 };
 
 }
