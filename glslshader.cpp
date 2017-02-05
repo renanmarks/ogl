@@ -1,11 +1,12 @@
 #define GL_GLEXT_PROTOTYPES 1
 #define GL3_PROTOTYPES 1
-#include "GL/gl.h"
+#include <GL/glew.h>
+#include <GL/gl.h>
 
-#include "glslshader.h"
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include "glslshader.h"
 
 GLuint convertType(const ogl::GLSLShader::Type _type)
 {

@@ -1,10 +1,11 @@
 #define GL_GLEXT_PROTOTYPES 1
 #define GL3_PROTOTYPES 1
+#include <GL/glew.h>
 #include <GL/gl.h>
 
-#include "glslprogram.h"
 #include <vector>
 #include <iostream>
+#include "glslprogram.h"
 
 ogl::GLSLProgram::GLSLProgram()
     : glId(glCreateProgram())

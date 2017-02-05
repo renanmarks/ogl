@@ -1,7 +1,11 @@
-#include <iostream>
-#define GL_GLEXT_PROTOTYPES
+#define GL_GLEXT_PROTOTYPES 1
+#define GL3_PROTOTYPES 1
+
+#include <GL/glew.h>
 #include <GL/gl.h>
 #include <SDL2/SDL.h>
+
+#include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "context.h"
@@ -10,7 +14,6 @@
 int main(int argc, char *argv[])
 {
     ogl::Context context;
-    ogl::GLSLProgram glslProgram;
 
     // Dark blue background
     glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
@@ -29,6 +32,7 @@ int main(int argc, char *argv[])
     glBindVertexArray(VertexArrayID);
 
     // Create and compile our GLSL program from the shaders
+    ogl::GLSLProgram glslProgram;
     glslProgram.addShader(ogl::GLSLShader("shaders/SimpleTransform.shader", ogl::GLSLShader::VERTEX));
     glslProgram.addShader(ogl::GLSLShader("shaders/SimpleFragmentShader.shader", ogl::GLSLShader::FRAGMENT));
     glslProgram.linkProgram();
@@ -46,7 +50,7 @@ int main(int argc, char *argv[])
 
     // Camera matrix
     glm::mat4 View       = glm::lookAt(
-                    glm::vec3(4,2,3), // Camera is at (4,3,3), in World Space
+                    glm::vec3(4,3,3), // Camera is at (4,3,3), in World Space
                     glm::vec3(0,0,0), // and looks at the origin
                     glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
                 );

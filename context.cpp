@@ -1,16 +1,17 @@
 #define GL_GLEXT_PROTOTYPES 1
 #define GL3_PROTOTYPES 1
+#include <GL/glew.h>
 #include <GL/gl.h>
 
-#include "context.h"
 #include <SDL2/SDL.h>
-
 #include <exception>
 #include <string>
 #include <iostream>
 #include <sstream>
 #include <fstream>
 #include <vector>
+
+#include "context.h"
 
 class ogl::Context::Impl
 {
@@ -36,9 +37,7 @@ private:
             throw std::runtime_error("Failed do init SDL video.");
         }
 
-        setupContextAttributes();
-
-        this->window = SDL_CreateWindow("OpenGL Test", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1024, 768, SDL_WINDOW_OPENGL);
+        this->window = SDL_CreateWindow("OpenGL Test", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL);
 
         if (this->window == nullptr)
         {
@@ -56,7 +55,22 @@ private:
             throw std::runtime_error(stream.str());
         }
 
+        this->setupContextAttributes();
         this->context = SDL_GL_CreateContext(this->window);
+
+        if (GLEW_VERSION == 1 && GLEW_VERSION_MAJOR <= 13)
+        {
+            glewExperimental = GL_TRUE;
+            //std::cout << "GLEW version: " << GLEW_VERSION << "." << GLEW_VERSION_MAJOR << "." << GLEW_VERSION_MINOR << "." <<GLEW_VERSION_MICRO << "\n";
+            std::cout << "GLEW experimental enabled.\n";
+        }
+
+        GLenum error = glewInit();
+
+        if (error != GLEW_OK)
+        {
+            throw std::runtime_error("Error initializing GLEW.");
+        }
 
         // This makes our buffer swap syncronized with the monitor's vertical refresh
         SDL_GL_SetSwapInterval(1);
